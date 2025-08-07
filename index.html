@@ -165,6 +165,10 @@
     <button onclick="addRow()" class="btn">Add Item</button>
   </div>
 
+  <div class="section">
+    <button onclick="generatePDF()" class="btn">Generate PDF</button>
+  </div>
+
   <script>
     const orderDataMap = {};
 
@@ -180,6 +184,17 @@
         <td><button onclick="this.parentElement.parentElement.remove()">X</button></td>
       `;
       tbody.appendChild(row);
+    }
+
+    function generatePDF() {
+      const element = document.body.cloneNode(true);
+      element.querySelectorAll('script, style, .instructions, .btn, #excelUpload, #orderDropdown, #excelPreview').forEach(el => el.remove());
+      html2pdf().from(element).set({
+        margin: 10,
+        filename: `Commercial_Invoice_${document.getElementById('ref').value || 'Invoice'}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).save();
     }
 
     function renderPreview(data) {
